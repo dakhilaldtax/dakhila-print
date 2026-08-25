@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Dakhila</title>
+
+    <link rel="stylesheet" href="create-dakhila.css">
+</head>
+
+<body>
+
+<div class="page">
+
+    <header class="page-header">
+        <div>
+            <h1>Create Dakhila</h1>
+            <p>নতুন দাখিলা তৈরি করুন</p>
+        </div>
+    </header>
+
+
+    <form id="dakhilaForm">
+
+
+        <!-- =========================
+             ১. সাধারণ তথ্য
+        ========================== -->
+
+        <section class="card">
+
+            <div class="section-title">
+                <span>১</span>
+                <div>
+                    <h2>সাধারণ তথ্য</h2>
+                    <p>দাখিলার প্রাথমিক তথ্য প্রদান করুন</p>
+                </div>
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>জেলা <span>*</span></label>
+
+                    <select id="district" required>
+                        <option value="">জেলা নির্বাচন করুন</option>
+                        <option value="রাজশাহী">রাজশাহী</option>
+                        <option value="নাটোর">নাটোর</option>
+                        <option value="পাবনা">পাবনা</option>
+                        <option value="ঢাকা">ঢাকা</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label>উপজেলা/থানা <span>*</span></label>
+
+                    <select id="upazila" required>
+                        <option value="">উপজেলা/থানা নির্বাচন করুন</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label>সিটি কর্পোরেশন/ পৌর/ ইউনিয়ন ভূমি অফিসের নাম <span>*</span></label>
+
+                    <select id="landOffice" required>
+                        <option value="">ভূমি অফিস নির্বাচন করুন</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label>মৌজার নাম ও জে. এল. নং <span>*</span></label>
+
+                    <select id="mouza" required>
+                        <option value="">মৌজা নির্বাচন করুন</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label>২ নং রেজিস্টার অনুযায়ী হোল্ডিং নম্বর <span>*</span></label>
+
+                    <input
+                        type="text"
+                        id="holdingNo"
+                        required
+                        placeholder="হোল্ডিং নম্বর">
+                </div>
+
+
+                <div class="form-group">
+                    <label>খতিয়ান নং <span>*</span></label>
+
+                    <input
+                        type="text"
+                        id="khatianNo"
+                        required
+                        placeholder="খতিয়ান নম্বর">
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ২. মালিকের বিবরণ
+        ========================== -->
+
+        <section class="card">
+
+            <div class="section-title">
+                <span>২</span>
+
+                <div>
+                    <h2>মালিকের বিবরণ</h2>
+                    <p>এক বা একাধিক মালিক যোগ করুন</p>
+                </div>
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table id="ownersTable">
+
+                    <thead>
+                        <tr>
+                            <th>ক্রমঃ</th>
+                            <th>মালিকের নাম</th>
+                            <th>মালিকের অংশ</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="ownersBody">
+
+                        <tr>
+                            <td class="serial">১</td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    class="owner-name"
+                                    placeholder="মালিকের নাম">
+                            </td>
+
+                            <td>
+                                <input
+                                    type="number"
+                                    class="owner-share"
+                                    min="0"
+                                    max="1"
+                                    step="0.01"
+                                    placeholder="0.00">
+                            </td>
+
+                            <td>
+                                <button
+                                    type="button"
+                                    class="remove-btn"
+                                    onclick="removeOwner(this)">
+                                    Remove
+                                </button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="table-footer">
+
+                <button
+                    type="button"
+                    class="add-btn"
+                    id="addOwnerBtn">
+                    + মালিক যোগ করুন
+                </button>
+
+
+                <div class="total-box">
+                    মোট মালিকের অংশ:
+                    <strong id="ownerTotal">0.00</strong>
+
+                    <span id="ownerStatus"></span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ৩. জমির বিবরণ
+        ========================== -->
+
+        <section class="card">
+
+            <div class="section-title">
+
+                <span>৩</span>
+
+                <div>
+                    <h2>জমির বিবরণ</h2>
+                    <p>দাগ অনুযায়ী জমির তথ্য প্রদান করুন</p>
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table id="landTable">
+
+                    <thead>
+
+                        <tr>
+                            <th>ক্রমঃ</th>
+                            <th>দাগ নং</th>
+                            <th>মূল শ্রেণি</th>
+                            <th>ব্যবহারভিত্তিক শ্রেণি</th>
+                            <th>জমির পরিমাণ (শতাংশ)</th>
+                            <th>Action</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="landBody">
+
+                        <tr>
+
+                            <td class="serial">১</td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    class="dag-no"
+                                    placeholder="দাগ নং">
+                            </td>
+
+                            <td>
+
+                                <select class="main-class">
+                                    <option value="">নির্বাচন করুন</option>
+                                    <option value="কৃষি">কৃষি</option>
+                                    <option value="অকৃষি">অকৃষি</option>
+                                </select>
+
+                            </td>
+
+
+                            <td>
+
+                                <select class="usage-class">
+
+                                    <option value="">নির্বাচন করুন</option>
+
+                                    <option value="ধানী (কৃষি)">
+                                        ধানী (কৃষি)
+                                    </option>
+
+                                    <option value="বাগান">
+                                        বাগান
+                                    </option>
+
+                                    <option value="বাড়ি">
+                                        বাড়ি
+                                    </option>
+
+                                    <option value="পুকুর">
+                                        পুকুর
+                                    </option>
+
+                                </select>
+
+                            </td>
+
+
+                            <td>
+
+                                <input
+                                    type="number"
+                                    class="land-amount"
+                                    min="0"
+                                    step="0.01"
+                                    placeholder="0.00">
+
+                            </td>
+
+
+                            <td>
+
+                                <button
+                                    type="button"
+                                    class="remove-btn"
+                                    onclick="removeLand(this)">
+                                    Remove
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="table-footer">
+
+                <button
+                    type="button"
+                    class="add-btn"
+                    id="addLandBtn">
+
+                    + দাগ যোগ করুন
+
+                </button>
+
+
+                <div class="total-box">
+
+                    সর্বমোট জমি:
+
+                    <strong>
+                        <span id="totalLand">0.00</span>
+                        শতাংশ
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ৪. আদায়ের বিবরণ
+        ========================== -->
+
+        <section class="card">
+
+            <div class="section-title">
+
+                <span>৪</span>
+
+                <div>
+                    <h2>আদায়ের বিবরণ</h2>
+                    <p>দাবি ও আদায়ের তথ্য প্রদান করুন</p>
+                </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>
+                        তিন বৎসরের ঊর্ধ্বের বকেয়া
+                    </label>
+
+                    <input
+                        type="number"
+                        id="oldDue"
+                        class="money"
+                        min="0"
+                        step="0.01"
+                        value="0">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        গত তিন বৎসরের বকেয়া
+                    </label>
+
+                    <input
+                        type="number"
+                        id="threeYearDue"
+                        class="money"
+                        min="0"
+                        step="0.01"
+                        value="0">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        বকেয়ার জরিমানা ও ক্ষতিপূরণ
+                    </label>
+
+                    <input
+                        type="number"
+                        id="penalty"
+                        class="money"
+                        min="0"
+                        step="0.01"
+                        value="0">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        হাল দাবি
+                    </label>
+
+                    <input
+                        type="number"
+                        id="currentDemand"
+                        class="money"
+                        min="0"
+                        step="0.01"
+                        value="0">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        মোট দাবি
+                    </label>
+
+                    <input
+                        type="number"
+                        id="totalDemand"
+                        readonly>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        মোট আদায়
+                    </label>
+
+                    <input
+                        type="number"
+                        id="totalCollection"
+                        class="money"
+                        min="0"
+                        step="0.01"
+                        value="0">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        মোট বকেয়া
+                    </label>
+
+                    <input
+                        type="number"
+                        id="totalDue"
+                        readonly>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>মন্তব্য</label>
+
+                <textarea
+                    id="comment"
+                    rows="4"
+                    placeholder="প্রয়োজনীয় মন্তব্য লিখুন"></textarea>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ৫. সর্বমোট
+        ========================== -->
+
+        <section class="card">
+
+            <div class="section-title">
+
+                <span>৫</span>
+
+                <div>
+                    <h2>সর্বমোট</h2>
+                </div>
+
+            </div>
+
+
+            <div class="total-words">
+
+                <label>
+                    সর্বমোট (কথায়)
+                </label>
+
+                <div id="totalInWords">
+                    শূন্য টাকা মাত্র
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ৬. কর পরিশোধের তথ্য
+        ========================== -->
+
+        <section class="card">
+
+            <div class="section-title">
+
+                <span>৬</span>
+
+                <div>
+                    <h2>কর পরিশোধের তথ্য</h2>
+                </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>
+                        সর্বশেষ কর পরিশোধের সাল
+                        <span>*</span>
+                    </label>
+
+                    <select id="taxYear" required>
+
+                        <option value="">
+                            অর্থবছর নির্বাচন করুন
+                        </option>
+
+                        <option value="২০২৫-২০২৬">
+                            ২০২৫-২০২৬ (অর্থবছর)
+                        </option>
+
+                        <option value="২০২৪-২০২৫">
+                            ২০২৪-২০২৫ (অর্থবছর)
+                        </option>
+
+                        <option value="২০২৩-২০২৪">
+                            ২০২৩-২০২৪ (অর্থবছর)
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        চালান নং
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="challanNo"
+                        required
+                        placeholder="চালান নম্বর">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        তারিখ
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="date"
+                        id="paymentDate"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        বাংলা তারিখ
+                    </label>
+
+                    <input
+                        type="text"
+                        id="banglaDate"
+                        readonly
+                        placeholder="অটো তৈরি হবে">
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             SUBMIT
+        ========================== -->
+
+        <section class="submit-section">
+
+            <button
+                type="reset"
+                class="secondary-btn">
+
+                Reset
+
+            </button>
+
+
+            <button
+                type="submit"
+                class="primary-btn">
+
+                Save & Generate Dakhila
+
+            </button>
+
+        </section>
+
+
+    </form>
+
+</div>
+
+
+<script src="create-dakhila.js"></script>
+
+</body>
+</html>
